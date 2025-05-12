@@ -1,0 +1,7 @@
+# mpg123xx - a C++ wrapper for libmpg123
+
+This is a modern C++ (currently C++23) wrapper for libmpg123.
+
+It is still a work-in-progress.
+
+mpg123xx is licensed under LGPLv3.

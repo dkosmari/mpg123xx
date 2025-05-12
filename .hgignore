@@ -1,0 +1,18 @@
+syntax: glob
+
+*~
+.deps
+lib*.a
+*.o
+stamp-h1
+autom4te.cache
+.dirstamp
+config.h
+config.h.in
+config.status
+config.log
+configure
+Makefile
+Makefile.in
+build-aux
+aclocal.m4

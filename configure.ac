@@ -2,7 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([mpg123xx], [0.0], [])
+AC_INIT([mpg123xx],
+        [0.0],
+        [https://github.com/dkosmari/mpg123xx/issues],
+        [],
+        [https://github.com/dkosmari/mpg123xx])
 AC_CONFIG_SRCDIR([src/mpg123.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])

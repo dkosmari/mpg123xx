@@ -5,22 +5,9 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include <cassert>
+
 #include "mpg123xx/handle.hpp"
-
-// TODO: get rid of these macros.
-
-#define CHECK(e)                                \
-    do {                                        \
-        if (e != MPG123_OK)                     \
-            throw error{*this};                 \
-    } while (false)
-
-
-#define ECHECK(e)                                       \
-    do {                                                \
-        if (e != MPG123_OK)                             \
-            return std::unexpected{error{*this}};       \
-    } while (false)
 
 
 using std::expected;
@@ -28,11 +15,6 @@ using std::unexpected;
 
 
 namespace mpg123 {
-
-    handle::handle()
-    {
-        create();
-    }
 
 
     handle::handle(const char* decoder)
@@ -47,10 +29,10 @@ namespace mpg123 {
     }
 
 
-    void
-    handle::create()
+    handle::~handle()
+        noexcept
     {
-        create(nullptr);
+        destroy();
     }
 
 
@@ -77,53 +59,64 @@ namespace mpg123 {
     handle::destroy()
         noexcept
     {
-        if (raw)
+        if (is_valid())
             mpg123_delete(release());
     }
 
 
     void
     handle::add_flags(unsigned flags)
+        noexcept
     {
-        auto e = mpg123_param(raw, MPG123_ADD_FLAGS, flags, 0.0);
-        CHECK(e);
+        int e = mpg123_param(raw, MPG123_ADD_FLAGS, flags, 0.0);
+        assert(e == MPG123_OK);
+    }
+
+
+    void
+    handle::remove_flags(unsigned flags)
+        noexcept
+    {
+        int e = mpg123_param(raw, MPG123_REMOVE_FLAGS, flags, 0.0);
+        assert(e == MPG123_OK);
     }
 
 
     unsigned
     handle::get_flags()
-        const
+        const noexcept
     {
         long lval = 0;
-        double dval = 0;
-        auto e = mpg123_getparam(const_cast<mpg123_handle*>(raw),
-                                 MPG123_FLAGS, &lval, &dval);
-        CHECK(e);
+        int e = mpg123_getparam(raw, MPG123_FLAGS, &lval, nullptr);
+        assert(e == MPG123_OK);
         return lval;
     }
 
 
     void
     handle::set_flags(unsigned flags)
+        noexcept
     {
-        auto e = mpg123_param(raw, MPG123_FLAGS, flags, 0.0);
-        CHECK(e);
+        int e = mpg123_param(raw, MPG123_FLAGS, flags, 0.0);
+        assert(e == MPG123_OK);
     }
 
 
     void
     handle::set_icy_interval(int value)
+        noexcept
     {
-        auto e = mpg123_param(raw, MPG123_ICY_INTERVAL, value, 0.0);
-        CHECK(e);
+        int e = mpg123_param(raw, MPG123_ICY_INTERVAL, value, 0.0);
+        assert(e == MPG123_OK);
     }
 
 
     void
     handle::set_verbose(bool v)
+        noexcept
     {
-        auto e = mpg123_param(raw, MPG123_VERBOSE, v, 0.0);
-        CHECK(e);
+        int e = mpg123_param(raw, MPG123_VERBOSE, v, 0.0);
+        assert(e == MPG123_OK);
     }
 
 
@@ -144,8 +137,9 @@ namespace mpg123 {
         long rate = 0;
         int channels = 0;
         int encoding = 0;
-        auto e = mpg123_getformat(raw, &rate, &channels, &encoding);
-        ECHECK(e);
+        int e = mpg123_getformat(raw, &rate, &channels, &encoding);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
         return format{
             .rate = rate,
             .channels = static_cast<unsigned>(channels),
@@ -159,16 +153,106 @@ namespace mpg123 {
                        unsigned channels,
                        unsigned encoding)
     {
-        auto e = mpg123_format(raw, rate, channels, encoding);
-        CHECK(e);
+        auto result = try_set_format(rate, channels, encoding);
+        if (!result)
+            throw result.error();
+    }
+
+
+    expected<void, error>
+    handle::try_set_format(long rate,
+                           unsigned channels,
+                           unsigned encoding)
+        noexcept
+    {
+        int e = mpg123_format(raw, rate, channels, encoding);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
     }
 
 
     void
     handle::open_feed()
     {
-        auto e = mpg123_open_feed(raw);
-        CHECK(e);
+        auto result = try_open_feed();
+        if (!result)
+            throw result.error();
+    }
+
+
+    expected<void, error>
+    handle::try_open_feed()
+        noexcept
+    {
+        int e = mpg123_open_feed(raw);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
+    }
+
+
+    void
+    handle::open(const path& filename)
+    {
+        auto result = try_open(filename);
+        if (!result)
+            throw result.error();
+    }
+
+
+    expected<void, error>
+    handle::try_open(const path& filename)
+        noexcept
+    {
+        int e = mpg123_open(raw, filename.c_str());
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
+    }
+
+
+    void
+    handle::open(const path& filename,
+                 mpg123_channelcount channels,
+                 mpg123_enc_enum encoding)
+    {
+        auto result = try_open(filename, channels, encoding);
+        if (!result)
+            throw result.error();
+    }
+
+
+    std::expected<void, error>
+    handle::try_open(const path& filename,
+                     mpg123_channelcount channels,
+                     mpg123_enc_enum encoding)
+        noexcept
+    {
+        int e = mpg123_open_fixed(raw, filename.c_str(), channels, encoding);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
+    }
+
+
+    void
+    handle::close()
+    {
+        auto result = try_close();
+        if (!result)
+            throw result.error();
+    }
+
+
+    expected<void, error>
+    handle::try_close()
+        noexcept
+    {
+        int e = mpg123_close(raw);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
     }
 
 
@@ -183,14 +267,15 @@ namespace mpg123 {
     }
 
 
-    std::expected<std::size_t,
-                  error>
-    handle::try_read(void* buf, std::size_t size)
+    std::expected<std::size_t, error>
+    handle::try_read(void* buf,
+                     std::size_t size)
         noexcept
     {
         std::size_t result = 0;
-        auto e = mpg123_read(raw, buf, size, &result);
-        ECHECK(e);
+        int e = mpg123_read(raw, buf, size, &result);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
         return result;
     }
 
@@ -212,11 +297,12 @@ namespace mpg123 {
         off_t num = 0;
         std::byte* data = nullptr;
         std::size_t size = 0;
-        auto e = mpg123_decode_frame(raw,
-                                     &num,
-                                     reinterpret_cast<unsigned char**>(&data),
-                                     &size);
-        ECHECK(e);
+        int e = mpg123_decode_frame(raw,
+                                    &num,
+                                    reinterpret_cast<unsigned char**>(&data),
+                                    &size);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
         return frame{
             .num = num,
             .samples = std::span<const std::byte>(data, size)
@@ -228,10 +314,23 @@ namespace mpg123 {
     handle::feed(const void* buf,
                  std::size_t size)
     {
-        auto e = mpg123_feed(raw,
-                             static_cast<const unsigned char*>(buf),
-                             size);
-        CHECK(e);
+        auto result = try_feed(buf, size);
+        if (!result)
+            throw result.error();
+    }
+
+
+    expected<void, error>
+    handle::try_feed(const void* buf,
+                     std::size_t size)
+        noexcept
+    {
+        int e = mpg123_feed(raw,
+                            static_cast<const unsigned char*>(buf),
+                            size);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
     }
 
 
@@ -246,11 +345,25 @@ namespace mpg123 {
     id3
     handle::get_id3()
     {
+        auto result = try_get_id3();
+        if (!result)
+            throw result.error();
+        return std::move(*result);
+    }
+
+
+    expected<id3, error>
+    handle::try_get_id3()
+        noexcept
+    {
         mpg123_id3v1* v1 = nullptr;
         mpg123_id3v2* v2 = nullptr;
-        auto e = mpg123_id3(raw, &v1, &v2);
-        CHECK(e);
-        return { .v1 = v1, .v2 = v2 };
+        int e = mpg123_id3(raw, &v1, &v2);
+        if  (e != MPG123_OK)
+            return unexpected{error{this}};
+        id3 result{ v1, v2 };
+        mpg123_meta_free(raw);
+        return result;
     }
 
 } // namespace mpg123

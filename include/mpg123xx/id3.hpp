@@ -67,6 +67,7 @@ namespace mpg123 {
     struct id3v2 {
 
         std::uint8_t version;
+
         std::string title;
         std::string artist;
         std::string album;
@@ -92,6 +93,15 @@ namespace mpg123 {
     struct id3 {
         std::optional<id3v1> v1;
         std::optional<id3v2> v2;
+
+        constexpr
+        id3()
+            noexcept = default;
+
+
+        id3(mpg123_id3v1* tag1,
+            mpg123_id3v2* tag2);
+
     }; // struct id3
 
 

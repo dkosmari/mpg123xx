@@ -19,8 +19,8 @@ namespace mpg123 {
     {}
 
 
-    error::error(const handle& h) :
-        std::runtime_error{mpg123_strerror(const_cast<mpg123_handle*>(h.data()))}
+    error::error(const handle* h) :
+        std::runtime_error{mpg123_strerror(const_cast<mpg123_handle*>(h->data()))}
     {}
 
 } // namespace mpg123

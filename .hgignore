@@ -1,18 +1,21 @@
 syntax: glob
 
+*.mp3
+*.o
 *~
 .deps
-lib*.a
-*.o
-stamp-h1
-autom4te.cache
 .dirstamp
+aclocal.m4
+autom4te.cache
+build-aux
 config.h
 config.h.in
-config.status
 config.log
+config.status
 configure
+lib*.a
 Makefile
 Makefile.in
-build-aux
-aclocal.m4
+stamp-h1
+
+examples/read_id3

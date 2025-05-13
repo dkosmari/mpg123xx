@@ -44,6 +44,16 @@ libmpg123xx_a_SOURCES = \
 	src/utils.hpp
 
 
+noinst_PROGRAMS = \
+	examples/read_id3
+
+
+examples_read_id3_SOURCES = \
+	examples/read_id3.cpp
+
+examples_read_id3_LDADD = libmpg123xx.a
+
+
 
 .PHONY: company
 company: compile_flags.txt

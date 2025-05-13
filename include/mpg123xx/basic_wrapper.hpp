@@ -7,21 +7,26 @@
 
 namespace mpg123 {
 
-    template<typename T>
+    template<typename T,
+             T InvalidValue = T{}>
     class basic_wrapper {
 
     protected:
 
-        T raw = {};
+        T raw{InvalidValue};
 
 
+        // Note: we can't call destroy() from the derived class from here.
         ~basic_wrapper()
             noexcept = default;
+
 
     public:
 
         using raw_type = T;
-        using state_t = raw_type;
+        using state_type = raw_type;
+
+        static constexpr raw_type invalid_value = InvalidValue;
 
 
         constexpr
@@ -59,6 +64,7 @@ namespace mpg123 {
         }
 
 
+        // Remember to always call destroy() from the derived class' destructor.
         virtual
         void
         destroy()
@@ -70,7 +76,7 @@ namespace mpg123 {
         is_valid()
             const noexcept
         {
-            return raw;
+            return raw != invalid_value;
         }
 
 
@@ -79,7 +85,7 @@ namespace mpg123 {
         operator bool()
             const noexcept
         {
-            return raw;
+            return is_valid();
         }
 
 
@@ -100,14 +106,14 @@ namespace mpg123 {
 
 
         void
-        acquire(state_t new_state)
+        acquire(state_type new_state)
             noexcept
         {
             raw = new_state;
         }
 
 
-        state_t
+        state_type
         release()
             noexcept
         {

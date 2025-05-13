@@ -18,7 +18,7 @@ namespace mpg123 {
 
     struct error : std::runtime_error {
         error(int code);
-        error(const handle& h);
+        error(const handle* h);
     };
 
 

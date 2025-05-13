@@ -99,4 +99,15 @@ namespace mpg123 {
     }
 
 
+    id3::id3(mpg123_id3v1* tag1,
+             mpg123_id3v2* tag2)
+    {
+        if (tag1)
+            v1.emplace(tag1);
+        if (tag2)
+            v2.emplace(tag2);
+    }
+
+
+
 } // namespace mpg123

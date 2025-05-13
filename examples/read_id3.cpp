@@ -15,8 +15,7 @@ show_id3_tag(const std::filesystem::path& filename)
 {
     try {
         cout << "Reading ID3 tag from " << filename << endl;
-        mpg123::handle h;
-        h.open(filename);
+        auto h = mpg123::handle::from_file(filename);
         auto format = h.get_format();
         cout << "Format: " << format << endl;
         unsigned meta = h.meta_check();
@@ -49,7 +48,6 @@ show_id3_tag(const std::filesystem::path& filename)
         } else {
             cout << "No ID3 tags found" << endl;
         }
-        h.close();
     }
     catch (std::exception& e) {
         cout << "Failed: " << e.what() << endl;

@@ -37,6 +37,10 @@ namespace mpg123 {
         using parent_type::parent_type;
 
 
+        /// Move constructor.
+        handle(handle&& other)
+            noexcept = default;
+
         /// Move assignment.
         handle&
         operator =(handle&& other)
@@ -46,6 +50,21 @@ namespace mpg123 {
         handle(const char* decoder = nullptr);
 
         handle(const std::string& decoder);
+
+
+        // Named constructor: create handle and open file.
+        [[nodiscard]]
+        static
+        handle
+        from_file(const path& filename);
+
+        // Named constructor: create handle and open file.
+        [[nodiscard]]
+        static
+        handle
+        from_file(const path& filename,
+                  mpg123_channelcount channels,
+                  mpg123_enc_enum encoding);
 
 
         ~handle()

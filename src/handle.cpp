@@ -29,6 +29,26 @@ namespace mpg123 {
     }
 
 
+    handle
+    handle::from_file(const path& filename)
+    {
+        handle h;
+        h.open(filename);
+        return h;
+    }
+
+
+    handle
+    handle::from_file(const path& filename,
+                      mpg123_channelcount channels,
+                      mpg123_enc_enum encoding)
+    {
+        handle h;
+        h.open(filename, channels, encoding);
+        return h;
+    }
+
+
     handle::~handle()
         noexcept
     {

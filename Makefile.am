@@ -44,6 +44,8 @@ libmpg123xx_a_SOURCES = \
 	src/utils.hpp
 
 
+if ENABLE_EXAMPLES
+
 noinst_PROGRAMS = \
 	examples/read_id3
 
@@ -53,6 +55,7 @@ examples_read_id3_SOURCES = \
 
 examples_read_id3_LDADD = libmpg123xx.a
 
+endif ENABLE_EXAMPLES
 
 
 .PHONY: company

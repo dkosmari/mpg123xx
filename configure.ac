@@ -24,5 +24,15 @@ AC_PROG_RANLIB
 PKG_CHECK_MODULES([MPG123], [libmpg123])
 
 
+AC_ARG_ENABLE([examples],
+              [AS_HELP_STRING([--enable-examples], [enable building examples])],
+              [],
+              [enable_examples=no])
+AM_CONDITIONAL([ENABLE_EXAMPLES], [test x$enable_examples = xyes])
+
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
+
+
+AC_MSG_NOTICE([Build examples: $enable_examples])

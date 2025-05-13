@@ -208,10 +208,28 @@ namespace mpg123 {
         feed(const void* buf,
              std::size_t size);
 
+        template<typename T,
+                 std::size_t E>
+        void
+        feed(std::span<const T, E> buf)
+        {
+            feed(buf.data(), buf.size_bytes());
+        }
+
+
         std::expected<void, error>
         try_feed(const void* buf,
                  std::size_t size)
             noexcept;
+
+        template<typename T,
+                 std::size_t E>
+        std::expected<void, error>
+        try_feed(std::span<const T, E> buf)
+            noexcept
+        {
+            return try_feed(buf.data(), buf.size_bytes());
+        }
 
 
         unsigned

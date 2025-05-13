@@ -12,6 +12,8 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 
+AC_CANONICAL_HOST
+
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 AC_PROG_CXX

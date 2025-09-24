@@ -1,11 +1,19 @@
 /*
- * mpg123xx - A C++ wrapper for libmpg123
+ * basic_wrapper - base class for C++ wrappers
  * Copyright 2025  Daniel K. O. (dkosmari)
  *
- * SPDX-License-Identifier: LGPL-3.0-or-later
- */
+ * This software can be distributed under the terms of any of the following licenses:
+ *   SPDX-License-Identifier: Apache-2.0
+ *   SPDX-License-Identifier: GPL-3.0-or-later
+ *   SPDX-License-Identifier: LGPL-3.0-or-later
+ *   SPDX-License-Identifier: MIT
+ *   SPDX-License-Identifier: Zlib
+*/
 
-namespace mpg123 {
+#ifndef MPG123XX_BASIC_WRAPPER_HPP
+#define MPG123XX_BASIC_WRAPPER_HPP
+
+namespace mpg123::detail {
 
     template<typename T,
              T InvalidValue = T{}>
@@ -124,4 +132,6 @@ namespace mpg123 {
 
     }; // class basic_wrapper
 
-} // namespace mpg123
+} // namespace mpg123::detail
+
+#endif

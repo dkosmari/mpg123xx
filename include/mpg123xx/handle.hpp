@@ -28,9 +28,9 @@ namespace mpg123 {
     using std::filesystem::path;
 
 
-    struct handle : basic_wrapper<mpg123_handle*> {
+    struct handle : detail::basic_wrapper<mpg123_handle*> {
 
-        using parent_type = basic_wrapper<mpg123_handle*>;
+        using parent_type = detail::basic_wrapper<mpg123_handle*>;
 
 
         // Inherit constructors.

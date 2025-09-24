@@ -15,8 +15,30 @@
 namespace mpg123 {
 
     struct frame {
-        std::intmax_t num;
+
+        std::intmax_t num = 0;
         std::span<const std::byte> samples;
+
+
+        constexpr
+        frame()
+            noexcept = default;
+
+        frame(std::intmax_t num,
+              const std::byte* data,
+              std::size_t size)
+            noexcept;
+
+        frame(std::intmax_t num,
+              const char* data,
+              std::size_t size)
+            noexcept;
+
+        frame(std::intmax_t num,
+              const unsigned char* data,
+              std::size_t size)
+            noexcept;
+
     };
 
 } // namespace mpg123

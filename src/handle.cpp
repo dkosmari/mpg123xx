@@ -315,18 +315,15 @@ namespace mpg123 {
         noexcept
     {
         off_t num = 0;
-        std::byte* data = nullptr;
+        unsigned char* data = nullptr;
         std::size_t size = 0;
         int e = mpg123_decode_frame(raw,
                                     &num,
-                                    reinterpret_cast<unsigned char**>(&data),
+                                    &data,
                                     &size);
         if (e != MPG123_OK)
             return unexpected{error{this}};
-        return frame{
-            .num = num,
-            .samples = std::span<const std::byte>(data, size)
-        };
+        return frame{ num, data, size };
     }
 
 

@@ -300,7 +300,7 @@ namespace mpg123 {
     }
 
 
-    frame
+    decoded_frame
     handle::decode_frame()
     {
         auto result = try_decode_frame();
@@ -310,7 +310,7 @@ namespace mpg123 {
     }
 
 
-    std::expected<frame, error>
+    std::expected<decoded_frame, error>
     handle::try_decode_frame()
         noexcept
     {
@@ -323,7 +323,31 @@ namespace mpg123 {
                                     &size);
         if (e != MPG123_OK)
             return unexpected{error{this}};
-        return frame{ num, data, size };
+        return decoded_frame{ num, data, size };
+    }
+
+
+    frame
+    handle::get_last_frame()
+    {
+        auto result = try_get_last_frame();
+        if (!result)
+            throw result.error();
+        return *result;
+    }
+
+
+    std::expected<frame, error>
+    handle::try_get_last_frame()
+        noexcept
+    {
+        unsigned long header = 0;
+        unsigned char* data = nullptr;
+        std::size_t size = 0;
+        int e = mpg123_framedata(raw, &header, &data, &size);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return frame{header, data, size};
     }
 
 

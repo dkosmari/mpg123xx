@@ -8,6 +8,7 @@
 #ifndef MPG123XX_FRAME_HPP
 #define MPG123XX_FRAME_HPP
 
+#include <cstddef>
 #include <cstdint>
 #include <span>
 
@@ -16,30 +17,31 @@ namespace mpg123 {
 
     struct frame {
 
-        std::intmax_t num = 0;
-        std::span<const std::byte> samples;
+        std::uint32_t header = 0;
+        std::span<std::byte> body;
 
 
         constexpr
         frame()
             noexcept = default;
 
-        frame(std::intmax_t num,
-              const std::byte* data,
+        frame(unsigned long header,
+              std::byte* data,
               std::size_t size)
             noexcept;
 
-        frame(std::intmax_t num,
-              const char* data,
+
+        frame(unsigned long header,
+              char* data,
               std::size_t size)
             noexcept;
 
-        frame(std::intmax_t num,
-              const unsigned char* data,
+        frame(unsigned long header,
+              unsigned char* data,
               std::size_t size)
             noexcept;
 
-    };
+    }; // struct frame
 
 } // namespace mpg123
 

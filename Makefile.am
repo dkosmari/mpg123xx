@@ -7,6 +7,7 @@ EXTRA_DIST = \
 
 mpg123xx_HEADERS = \
 	include/mpg123xx/basic_wrapper.hpp \
+	include/mpg123xx/decoded_frame.hpp \
 	include/mpg123xx/error.hpp \
 	include/mpg123xx/format.hpp \
 	include/mpg123xx/frame.hpp \
@@ -34,6 +35,7 @@ lib_LIBRARIES = libmpg123xx.a
 
 
 libmpg123xx_a_SOURCES = \
+	src/decoded_frame.cpp \
 	src/error.cpp \
 	src/format.cpp \
 	src/frame.cpp \

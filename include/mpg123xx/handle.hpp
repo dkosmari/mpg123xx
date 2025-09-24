@@ -17,6 +17,7 @@
 #include <mpg123.h>
 
 #include "basic_wrapper.hpp"
+#include "decoded_frame.hpp"
 #include "error.hpp"
 #include "format.hpp"
 #include "frame.hpp"
@@ -196,11 +197,19 @@ namespace mpg123 {
         }
 
 
-        frame
+        decoded_frame
         decode_frame();
 
-        std::expected<frame, error>
+        std::expected<decoded_frame, error>
         try_decode_frame()
+            noexcept;
+
+
+        frame
+        get_last_frame();
+
+        std::expected<frame, error>
+        try_get_last_frame()
             noexcept;
 
 

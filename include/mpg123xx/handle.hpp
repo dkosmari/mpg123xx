@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <expected>
 #include <filesystem>
+#include <optional>
 #include <span>
 #include <string>
 
@@ -131,6 +132,19 @@ namespace mpg123 {
                        unsigned channels,
                        unsigned encoding)
             noexcept;
+
+
+        void
+        set_decoder(const std::string& name);
+
+        std::expected<void, error>
+        try_set_decoder(const std::string& name)
+            noexcept;
+
+
+        std::string
+        get_decoder()
+            const;
 
 
         void

@@ -193,6 +193,34 @@ namespace mpg123 {
 
 
     void
+    handle::set_decoder(const std::string& name)
+    {
+        auto result = try_set_decoder(name);
+        if (!result)
+            throw result.error();
+    }
+
+
+    std::expected<void, error>
+    handle::try_set_decoder(const std::string& name)
+        noexcept
+    {
+        int e = mpg123_decoder(raw, name.data());
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
+    }
+
+
+    std::string
+    handle::get_decoder()
+        const
+    {
+        return mpg123_current_decoder(raw);
+    }
+
+
+    void
     handle::open_feed()
     {
         auto result = try_open_feed();

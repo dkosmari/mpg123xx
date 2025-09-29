@@ -150,7 +150,7 @@ namespace mpg123 {
     }
 
 
-    std::expected<format, error>
+    expected<format, error>
     handle::try_get_format()
         noexcept
     {
@@ -201,7 +201,7 @@ namespace mpg123 {
     }
 
 
-    std::expected<void, error>
+    expected<void, error>
     handle::try_set_decoder(const std::string& name)
         noexcept
     {
@@ -271,7 +271,7 @@ namespace mpg123 {
     }
 
 
-    std::expected<void, error>
+    expected<void, error>
     handle::try_open(const path& filename,
                      mpg123_channelcount channels,
                      mpg123_enc_enum encoding)
@@ -304,6 +304,26 @@ namespace mpg123 {
     }
 
 
+    void
+    handle::scan()
+    {
+        auto result = try_scan();
+        if (!result)
+            throw result.error();
+    }
+
+
+    expected<void, error>
+    handle::try_scan()
+        noexcept
+    {
+        int e = mpg123_scan(raw);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        return {};
+    }
+
+
     std::size_t
     handle::read(void* buf,
                  std::size_t size)
@@ -315,7 +335,7 @@ namespace mpg123 {
     }
 
 
-    std::expected<std::size_t, error>
+    expected<std::size_t, error>
     handle::try_read(void* buf,
                      std::size_t size)
         noexcept
@@ -338,7 +358,7 @@ namespace mpg123 {
     }
 
 
-    std::expected<samples, error>
+    expected<samples, error>
     handle::try_decode_frame()
         noexcept
     {
@@ -353,17 +373,17 @@ namespace mpg123 {
 
 
     frame
-    handle::get_last_frame()
+    handle::get_current_frame()
     {
-        auto result = try_get_last_frame();
+        auto result = try_get_current_frame();
         if (!result)
             throw result.error();
         return *result;
     }
 
 
-    std::expected<frame, error>
-    handle::try_get_last_frame()
+    expected<frame, error>
+    handle::try_get_current_frame()
         noexcept
     {
         unsigned long header = 0;
@@ -373,6 +393,122 @@ namespace mpg123 {
         if (e != MPG123_OK)
             return unexpected{error{this}};
         return frame{header, data, size};
+    }
+
+
+    dbl_seconds
+    handle::get_current_frame_duration()
+    {
+        auto result = try_get_current_frame_duration();
+        if (!result)
+            throw result.error();
+        return *result;
+    }
+
+
+    expected<dbl_seconds, error>
+    handle::try_get_current_frame_duration()
+        noexcept
+    {
+        double result = mpg123_tpf(raw);
+        if (result < 0)
+            return unexpected{error{this}};
+        return dbl_seconds{result};
+    }
+
+
+    unsigned
+    handle::get_current_frame_size_samples()
+    {
+        auto result = try_get_current_frame_size_samples();
+        if (!result)
+            throw result.error();
+        return *result;
+    }
+
+
+    expected<unsigned, error>
+    handle::try_get_current_frame_size_samples()
+        noexcept
+    {
+        int result = mpg123_spf(raw);
+        if (result < 0)
+            return unexpected{error{this}};
+        return result;
+    }
+
+
+    off_t
+    handle::get_size_frames()
+    {
+        auto result = try_get_size_frames();
+        if (!result)
+            throw result.error();
+        return *result;
+    }
+
+
+    expected<off_t, error>
+    handle::try_get_size_frames()
+        noexcept
+    {
+        off_t result = mpg123_framelength(raw);
+        if (result == MPG123_ERR)
+            return unexpected{error{this}};
+        return result;
+    }
+
+
+    off_t
+    handle::get_size_samples()
+    {
+        auto result = try_get_size_samples();
+        if (!result)
+            throw result.error();
+        return *result;
+    }
+
+
+    expected<off_t, error>
+    handle::try_get_size_samples()
+        noexcept
+    {
+        off_t result = mpg123_length(raw);
+        if (result == MPG123_ERR)
+            return unexpected{error{this}};
+        return result;
+    }
+
+
+    frame_info
+    handle::get_frame_info()
+    {
+        auto result = try_get_frame_info();
+        if (!result)
+            throw result.error();
+        return *result;
+    }
+
+
+    expected<frame_info, error>
+    handle::try_get_frame_info()
+        noexcept
+    {
+        mpg123_frameinfo info;
+        int e = mpg123_info(raw, &info);
+        if (e != MPG123_OK)
+            return unexpected{error{this}};
+        frame_info result;
+        result.version  = static_cast<mpg123_version>(info.version);
+        result.layer    = info.layer;
+        result.mode     = static_cast<mpg123_mode>(info.mode);
+        result.mode_ext = info.mode_ext;
+        result.flags    = info.flags;
+        result.emphasis = info.emphasis;
+        result.bitrate  = info.bitrate;
+        result.abr_rate = info.abr_rate;
+        result.vbr      = static_cast<mpg123_vbr>(info.vbr);
+        return result;
     }
 
 

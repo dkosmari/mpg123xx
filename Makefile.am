@@ -10,6 +10,7 @@ mpg123xx_HEADERS = \
 	include/mpg123xx/error.hpp \
 	include/mpg123xx/format.hpp \
 	include/mpg123xx/frame.hpp \
+	include/mpg123xx/frame_info.hpp \
 	include/mpg123xx/handle.hpp \
 	include/mpg123xx/id3.hpp \
 	include/mpg123xx/mpg123.hpp \

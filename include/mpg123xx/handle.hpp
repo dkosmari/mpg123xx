@@ -8,6 +8,7 @@
 #ifndef MPG123XX_HANDLE_HPP
 #define MPG123XX_HANDLE_HPP
 
+#include <chrono>
 #include <cstddef>
 #include <expected>
 #include <filesystem>
@@ -21,6 +22,7 @@
 #include "error.hpp"
 #include "format.hpp"
 #include "frame.hpp"
+#include "frame_info.hpp"
 #include "id3.hpp"
 #include "samples.hpp"
 
@@ -28,6 +30,9 @@
 namespace mpg123 {
 
     using std::filesystem::path;
+
+
+    using dbl_seconds = std::chrono::duration<double>;
 
 
     struct handle : detail::basic_wrapper<mpg123_handle*> {
@@ -142,6 +147,7 @@ namespace mpg123 {
             noexcept;
 
 
+        [[nodiscard]]
         std::string
         get_decoder()
             const;
@@ -150,6 +156,7 @@ namespace mpg123 {
         void
         open_feed();
 
+        [[nodiscard]]
         std::expected<void, error>
         try_open_feed()
             noexcept;
@@ -158,7 +165,7 @@ namespace mpg123 {
         void
         open(const path& filename);
 
-
+        [[nodiscard]]
         std::expected<void, error>
         try_open(const path& filename)
             noexcept;
@@ -168,6 +175,7 @@ namespace mpg123 {
              mpg123_channelcount channels,
              mpg123_enc_enum encoding);
 
+        [[nodiscard]]
         std::expected<void, error>
         try_open(const path& filename,
                  mpg123_channelcount channels,
@@ -183,12 +191,23 @@ namespace mpg123 {
             noexcept;
 
 
+        void
+        scan();
+
+        [[nodiscard]]
+        std::expected<void, error>
+        try_scan()
+            noexcept;
+
+
+        [[nodiscard]]
         std::size_t
         read(void* buf,
              std::size_t size);
 
         template<typename T,
                  std::size_t E>
+        [[nodiscard]]
         std::size_t
         read(std::span<T, E> buf)
         {
@@ -196,6 +215,7 @@ namespace mpg123 {
         }
 
 
+        [[nodiscard]]
         std::expected<std::size_t, error>
         try_read(void* buf,
                  std::size_t size)
@@ -203,6 +223,7 @@ namespace mpg123 {
 
         template<typename T,
                  std::size_t E>
+        [[nodiscard]]
         std::expected<std::size_t, error>
         try_read(std::span<T, E> buf)
             noexcept
@@ -214,16 +235,62 @@ namespace mpg123 {
         samples
         decode_frame();
 
+        [[nodiscard]]
         std::expected<samples, error>
         try_decode_frame()
             noexcept;
 
 
         frame
-        get_last_frame();
+        get_current_frame();
 
+        [[nodiscard]]
         std::expected<frame, error>
-        try_get_last_frame()
+        try_get_current_frame()
+            noexcept;
+
+
+        dbl_seconds
+        get_current_frame_duration();
+
+        [[nodiscard]]
+        std::expected<dbl_seconds, error>
+        try_get_current_frame_duration()
+            noexcept;
+
+
+        unsigned
+        get_current_frame_size_samples();
+
+        [[nodiscard]]
+        std::expected<unsigned, error>
+        try_get_current_frame_size_samples()
+            noexcept;
+
+
+        off_t
+        get_size_frames();
+
+        [[nodiscard]]
+        std::expected<off_t, error>
+        try_get_size_frames()
+            noexcept;
+
+
+        off_t
+        get_size_samples();
+
+        [[nodiscard]]
+        std::expected<off_t, error>
+        try_get_size_samples()
+            noexcept;
+
+
+        frame_info
+        get_frame_info();
+
+        std::expected<frame_info, error>
+        try_get_frame_info()
             noexcept;
 
 
@@ -240,6 +307,7 @@ namespace mpg123 {
         }
 
 
+        [[nodiscard]]
         std::expected<void, error>
         try_feed(const void* buf,
                  std::size_t size)
@@ -247,6 +315,7 @@ namespace mpg123 {
 
         template<typename T,
                  std::size_t E>
+        [[nodiscard]]
         std::expected<void, error>
         try_feed(std::span<const T, E> buf)
             noexcept
@@ -262,6 +331,7 @@ namespace mpg123 {
         id3
         get_id3();
 
+        [[nodiscard]]
         std::expected<id3, error>
         try_get_id3()
             noexcept;

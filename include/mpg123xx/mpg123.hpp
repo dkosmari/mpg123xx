@@ -15,5 +15,6 @@
 #include "frame.hpp"
 #include "handle.hpp"
 #include "id3.hpp"
+#include "samples.hpp"
 
 #endif

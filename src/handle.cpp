@@ -328,7 +328,7 @@ namespace mpg123 {
     }
 
 
-    decoded_frame
+    samples
     handle::decode_frame()
     {
         auto result = try_decode_frame();
@@ -338,20 +338,17 @@ namespace mpg123 {
     }
 
 
-    std::expected<decoded_frame, error>
+    std::expected<samples, error>
     handle::try_decode_frame()
         noexcept
     {
         off_t num = 0;
         unsigned char* data = nullptr;
         std::size_t size = 0;
-        int e = mpg123_decode_frame(raw,
-                                    &num,
-                                    &data,
-                                    &size);
+        int e = mpg123_decode_frame(raw, &num, &data, &size);
         if (e != MPG123_OK)
             return unexpected{error{this}};
-        return decoded_frame{ num, data, size };
+        return samples{ num, data, size };
     }
 
 

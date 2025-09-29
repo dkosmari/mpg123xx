@@ -18,11 +18,11 @@
 #include <mpg123.h>
 
 #include "basic_wrapper.hpp"
-#include "decoded_frame.hpp"
 #include "error.hpp"
 #include "format.hpp"
 #include "frame.hpp"
 #include "id3.hpp"
+#include "samples.hpp"
 
 
 namespace mpg123 {
@@ -211,10 +211,10 @@ namespace mpg123 {
         }
 
 
-        decoded_frame
+        samples
         decode_frame();
 
-        std::expected<decoded_frame, error>
+        std::expected<samples, error>
         try_decode_frame()
             noexcept;
 

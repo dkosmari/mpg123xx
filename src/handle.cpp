@@ -499,15 +499,17 @@ namespace mpg123 {
         if (e != MPG123_OK)
             return unexpected{error{this}};
         frame_info result;
-        result.version  = static_cast<mpg123_version>(info.version);
-        result.layer    = info.layer;
-        result.mode     = static_cast<mpg123_mode>(info.mode);
-        result.mode_ext = info.mode_ext;
-        result.flags    = info.flags;
-        result.emphasis = info.emphasis;
-        result.bitrate  = info.bitrate;
-        result.abr_rate = info.abr_rate;
-        result.vbr      = static_cast<mpg123_vbr>(info.vbr);
+        result.version     = static_cast<mpg123_version>(info.version);
+        result.layer       = info.layer;
+        result.rate        = info.rate;
+        result.mode        = static_cast<mpg123_mode>(info.mode);
+        result.mode_ext    = info.mode_ext;
+        result.frame_size  = info.framesize;
+        result.flags       = info.flags;
+        result.emphasis    = info.emphasis;
+        result.bitrate     = info.bitrate;
+        result.avg_bitrate = info.abr_rate;
+        result.vbr_mode    = static_cast<mpg123_vbr>(info.vbr);
         return result;
     }
 

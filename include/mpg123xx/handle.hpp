@@ -242,56 +242,62 @@ namespace mpg123 {
 
 
         frame
-        get_current_frame();
+        get_current_frame()
+            const;
 
         [[nodiscard]]
         std::expected<frame, error>
         try_get_current_frame()
-            noexcept;
+            const noexcept;
 
 
         dbl_seconds
-        get_current_frame_duration();
+        get_current_frame_duration()
+            const;
 
         [[nodiscard]]
         std::expected<dbl_seconds, error>
         try_get_current_frame_duration()
-            noexcept;
+            const noexcept;
 
 
         unsigned
-        get_current_frame_size_samples();
+        get_current_frame_size_samples()
+            const;
 
         [[nodiscard]]
         std::expected<unsigned, error>
         try_get_current_frame_size_samples()
-            noexcept;
+            const noexcept;
 
 
         off_t
-        get_size_frames();
+        get_size_frames()
+            const;
 
         [[nodiscard]]
         std::expected<off_t, error>
         try_get_size_frames()
-            noexcept;
+            const noexcept;
 
 
         off_t
-        get_size_samples();
+        get_size_samples()
+            const;
 
         [[nodiscard]]
         std::expected<off_t, error>
         try_get_size_samples()
-            noexcept;
+            const noexcept;
 
 
         frame_info
-        get_frame_info();
+        get_frame_info()
+            const;
 
         std::expected<frame_info, error>
         try_get_frame_info()
-            noexcept;
+            const noexcept;
 
 
         void
@@ -326,15 +332,16 @@ namespace mpg123 {
 
         unsigned
         meta_check()
-            noexcept;
+            const noexcept;
 
         id3
-        get_id3();
+        get_id3()
+            const;
 
         [[nodiscard]]
         std::expected<id3, error>
         try_get_id3()
-            noexcept;
+            const noexcept;
 
     };
 

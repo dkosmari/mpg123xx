@@ -374,6 +374,7 @@ namespace mpg123 {
 
     frame
     handle::get_current_frame()
+        const
     {
         auto result = try_get_current_frame();
         if (!result)
@@ -384,7 +385,7 @@ namespace mpg123 {
 
     expected<frame, error>
     handle::try_get_current_frame()
-        noexcept
+        const noexcept
     {
         unsigned long header = 0;
         unsigned char* data = nullptr;
@@ -398,6 +399,7 @@ namespace mpg123 {
 
     dbl_seconds
     handle::get_current_frame_duration()
+        const
     {
         auto result = try_get_current_frame_duration();
         if (!result)
@@ -408,7 +410,7 @@ namespace mpg123 {
 
     expected<dbl_seconds, error>
     handle::try_get_current_frame_duration()
-        noexcept
+        const noexcept
     {
         double result = mpg123_tpf(raw);
         if (result < 0)
@@ -419,6 +421,7 @@ namespace mpg123 {
 
     unsigned
     handle::get_current_frame_size_samples()
+        const
     {
         auto result = try_get_current_frame_size_samples();
         if (!result)
@@ -429,7 +432,7 @@ namespace mpg123 {
 
     expected<unsigned, error>
     handle::try_get_current_frame_size_samples()
-        noexcept
+        const noexcept
     {
         int result = mpg123_spf(raw);
         if (result < 0)
@@ -440,6 +443,7 @@ namespace mpg123 {
 
     off_t
     handle::get_size_frames()
+        const
     {
         auto result = try_get_size_frames();
         if (!result)
@@ -450,7 +454,7 @@ namespace mpg123 {
 
     expected<off_t, error>
     handle::try_get_size_frames()
-        noexcept
+        const noexcept
     {
         off_t result = mpg123_framelength(raw);
         if (result == MPG123_ERR)
@@ -461,6 +465,7 @@ namespace mpg123 {
 
     off_t
     handle::get_size_samples()
+        const
     {
         auto result = try_get_size_samples();
         if (!result)
@@ -471,7 +476,7 @@ namespace mpg123 {
 
     expected<off_t, error>
     handle::try_get_size_samples()
-        noexcept
+        const noexcept
     {
         off_t result = mpg123_length(raw);
         if (result == MPG123_ERR)
@@ -482,6 +487,7 @@ namespace mpg123 {
 
     frame_info
     handle::get_frame_info()
+        const
     {
         auto result = try_get_frame_info();
         if (!result)
@@ -492,7 +498,7 @@ namespace mpg123 {
 
     expected<frame_info, error>
     handle::try_get_frame_info()
-        noexcept
+        const noexcept
     {
         mpg123_frameinfo info;
         int e = mpg123_info(raw, &info);
@@ -540,7 +546,7 @@ namespace mpg123 {
 
     unsigned
     handle::meta_check()
-        noexcept
+        const noexcept
     {
         return mpg123_meta_check(raw);
     }
@@ -548,6 +554,7 @@ namespace mpg123 {
 
     id3
     handle::get_id3()
+        const
     {
         auto result = try_get_id3();
         if (!result)
@@ -558,7 +565,7 @@ namespace mpg123 {
 
     expected<id3, error>
     handle::try_get_id3()
-        noexcept
+        const noexcept
     {
         mpg123_id3v1* v1 = nullptr;
         mpg123_id3v2* v2 = nullptr;

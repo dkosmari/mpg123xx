@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.71])
 AC_INIT([mpg123xx],
         [0.0],
         [https://github.com/dkosmari/mpg123xx/issues],
@@ -16,11 +16,11 @@ AC_CANONICAL_HOST
 
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
+LT_INIT
+
 AC_PROG_CXX
 AX_APPEND_COMPILE_FLAGS([-std=c++23], [CXX])
 AC_LANG([C++])
-
-AC_PROG_RANLIB
 
 
 PKG_CHECK_MODULES([MPG123], [libmpg123])

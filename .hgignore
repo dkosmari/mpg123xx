@@ -1,10 +1,12 @@
 syntax: glob
 
+*.lo
 *.mp3
 *.o
 *~
 .deps
 .dirstamp
+.libs
 aclocal.m4
 autom4te.cache
 build-aux
@@ -14,6 +16,8 @@ config.log
 config.status
 configure
 lib*.a
+lib*.la
+libtool
 Makefile
 Makefile.in
 stamp-h1

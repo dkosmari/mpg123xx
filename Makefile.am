@@ -4,7 +4,6 @@ EXTRA_DIST = \
 	README.md
 
 
-
 mpg123xx_HEADERS = \
 	include/mpg123xx/basic_wrapper.hpp \
 	include/mpg123xx/error.hpp \
@@ -19,7 +18,6 @@ mpg123xx_HEADERS = \
 mpg123xxdir = $(includedir)/mpg123xx
 
 
-
 AM_CPPFLAGS = \
 	$(MPG123_CFLAGS) \
 	-I$(srcdir)/include
@@ -32,10 +30,10 @@ AM_CXXFLAGS = \
 LIBS = $(MPG123_LIBS)
 
 
-lib_LIBRARIES = libmpg123xx.a
+lib_LTLIBRARIES = lib/libmpg123xx.la
 
 
-libmpg123xx_a_SOURCES = \
+lib_libmpg123xx_la_SOURCES = \
 	src/error.cpp \
 	src/format.cpp \
 	src/frame.cpp \
@@ -56,7 +54,7 @@ noinst_PROGRAMS = \
 examples_read_id3_SOURCES = \
 	examples/read_id3.cpp
 
-examples_read_id3_LDADD = libmpg123xx.a
+examples_read_id3_LDADD = lib/libmpg123xx.la
 
 endif ENABLE_EXAMPLES
 
